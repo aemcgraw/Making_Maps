@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Map Maker</title>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+<link rel="stylesheet" href="{{url_for('static',filename='making_maps.css') }}">
+<script src="{{url_for('static',filename='making_maps.js')}}"></script>
+</head>
+
+<body>
+  <div id="mainpage">
+    <header>
+    Making Maps
+    </header>
+    <div id="datapage">
+      <div id="datarow">
+	    <div id="sidebar">
+          <h2>Settings</h2>
+          <form>
+            x: <input type="text" name="x"><br>
+            y: <input type="text" name="y">
+          </form>
+          <button class="btn generate", onclick="generate_map()">Generate</button>
+        </div>
+        <div id="datacontainer">    
+		  <div id="mapdata">
+            <img id="displaymap" src="{{url_for('static', filename='test.bmp')}}" alt="The Map">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<hr>
+<address></address>
+</body>
+</html>
