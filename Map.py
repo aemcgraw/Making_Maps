@@ -64,6 +64,8 @@ class Map(Region.Region):
 
     def save(self, path):
         try:
-            self.image.save(path)
+            if not path.toLower().endswith('.png'):
+                path += '.png'
+            self.image.save(path, format='PNG')
         except IOError:
             print("Cannot convert")	
