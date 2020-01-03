@@ -1,7 +1,8 @@
 from PIL import Image
 from random import randint
 
-import HeightMap
+from PerlinMap import PerlinMap
+from DiamondSquareMap import DiamondSquareMap
 
 import argparse
 import math
@@ -27,9 +28,9 @@ if __name__ == "__main__":
     args = parse()
 
     new_image = Image.new('RGBA', (args.x, args.y), (0, 255, 0, 255))
-    ht = HeightMap.HeightMap(new_image, pointdist=100)
-    ht2 = HeightMap.HeightMap(new_image, pointdist=10)
-    ht.add(ht2)
+    ht = DiamondSquareMap(new_image)
+    #ht = PerlinMap(new_image, pointdist=10)
+    #ht.add(ht2)
     ht.heightmap_to_image()
 
     ht.image.save(args.output_image, format='PNG')
