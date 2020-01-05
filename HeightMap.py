@@ -7,7 +7,7 @@ import math
 
 class HeightMap(object):
     def __init__(self, image):
-        self.image = Image.new('RGBA', (image.width, image.height), (0, 0, 255, 255))
+        self.image = image
         self.scale = 1
 
         self.mapping = self._get_setup()
@@ -18,6 +18,31 @@ class HeightMap(object):
         for x in range(self.image.width):
             rows.append(column[:])
         return rows
+
+    def erode(self):
+        count = 0
+        erosionthresh = 0.1
+        ev = erosionthresh / 2
+        for x in range(1, len(self.mapping) - 1):
+            for y in range(1, len(self.mapping[x]) - 1):
+                position = self.mapping[x][y]
+                if position - self.mapping[x+1][y] > erosionthresh:
+                    self.mapping[x][y] -= ev
+                    self.mapping[x+1][y] += ev
+                    count += 1
+                if position - self.mapping[x][y+1] > erosionthresh:
+                    self.mapping[x][y] -= ev
+                    self.mapping[x][y+1] += ev
+                    count += 1
+                if position - self.mapping[x-1][y] > erosionthresh:
+                    self.mapping[x][y] -= ev
+                    self.mapping[x-1][y] += ev
+                    count += 1
+                if position - self.mapping[x][y-1] > erosionthresh:
+                    self.mapping[x][y] -= ev
+                    self.mapping[x][y-1] += ev
+                    count += 1
+        print("Eroded " + str(count) + " times")
 
     def fuzz(self):
         fuzzfactor = self.scale / 20

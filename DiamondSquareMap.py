@@ -8,9 +8,11 @@ import math
 from HeightMap import HeightMap
 
 class DiamondSquareMap(HeightMap):
-    def __init__(self, image):
+    def __init__(self, image, chaos=1.0, damping=0.75, verbose=False):
         super().__init__(image)
         self.scale = 1
+        self.damping = damping
+        self.chaos = chaos
 
         self.mapping = self._get_setup() 
         self.build_mapping()
@@ -37,6 +39,7 @@ class DiamondSquareMap(HeightMap):
 
     def build_mapping(self):
         maxedge = max(self.image.width, self.image.height)
+        chaos = self.chaos
         bx = 4
         while (bx + 1) < maxedge:
             bx = bx * 2
@@ -46,16 +49,44 @@ class DiamondSquareMap(HeightMap):
         totalsize = bx + 1
         ix = 0
         iy = 0
-        chaos = 1
-        damping = .75        #.8 works well
 
-        bx1 = boxmap[ix][ix] = uniform(-chaos, chaos)
-        bx2 = boxmap[bx][ix] = uniform(-chaos, chaos)
-        bx3 = boxmap[ix][bx] = uniform(-chaos, chaos)
-        bx4 = boxmap[bx][bx] = uniform(-chaos, chaos)
+        #bx1 = boxmap[ix][ix] = uniform(-chaos, chaos)
+        #bx2 = boxmap[bx][ix] = uniform(-chaos, chaos)
+        #bx3 = boxmap[ix][bx] = uniform(-chaos, chaos)
+        #bx4 = boxmap[bx][bx] = uniform(-chaos, chaos)
 
+        bx1 = boxmap[ix][ix] = uniform(-1.0, 1.0)
+        bx2 = boxmap[bx][ix] = uniform(-1.0, 1.0)
+        bx3 = boxmap[ix][bx] = uniform(-1.0, 1.0)
+        bx4 = boxmap[bx][bx] = uniform(-1.0, 1.0)
+
+        #while ( bx / 2 ) >= 256:
+        #    print("Random")
+        #    newbx = int(bx / 2)
+        #    for x in range(0, totalsize - bx, bx):
+        #        for y in range(0, totalsize - bx, bx):
+        #            #Diamond
+        #            centerx = x + newbx
+        #            centery = y + newbx
+        #            bx5 = boxmap[centerx][centery] = uniform(-chaos, chaos)
+
+        #    for x in range(0, totalsize - bx, bx):
+        #        for y in range(0, totalsize - bx, bx):
+        #            centerx = x + newbx
+        #            centery = y + newbx
+        #            #Box
+        #            boxmap[centerx][y] = uniform(-chaos, chaos)
+        #            boxmap[centerx][y + bx] = uniform(-chaos, chaos)
+        #            boxmap[x][centery] = uniform(-chaos, chaos)
+        #            boxmap[x + bx][centery] = uniform(-chaos, chaos)
+        #    bx = newbx
+
+        #for x in range(0, totalsize, bx):
+        #    print(str([x for x in boxmap[x] if x != 0]))
+  
+        #chaos = chaos * damping * damping
         while ( bx / 2 ) >= 1:
-            chaos = chaos * damping
+            chaos = chaos * self.damping
 
             newbx = int(bx / 2)
             for x in range(0, totalsize - bx, bx):
@@ -78,8 +109,14 @@ class DiamondSquareMap(HeightMap):
 
                     centerx = x + newbx
                     centery = y + newbx
+                    bx5 = boxmap[centerx][centery]
                     #Box
                     #TODO : Take averages properly
+                    #boxmap[centerx][y] = ((bx5 + bx1 + bx2) / 3 + uniform(-chaos, chaos))
+                    #boxmap[centerx][y + bx] = ((bx5 + bx3 + bx4) / 3 + uniform(-chaos, chaos))
+                    #boxmap[x][centery] = ((bx5 + bx1 + bx3) / 3 + uniform(-chaos, chaos))
+                    #boxmap[x + bx][centery] = ((bx5 + bx2 + bx4) / 3 + uniform(-chaos, chaos))
+
                     boxmap[centerx][y] = ((bx5 + bx1 + bx2 + 
                         (boxmap[centerx][y - newbx] if self.test_point(y, newbx, totalsize) else 0)) / 4 +
                         uniform(-chaos, chaos))
