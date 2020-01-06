@@ -29,13 +29,10 @@ if __name__ == "__main__":
     args = parse()
 
     new_image = Image.new('RGBA', (args.x, args.y), (0, 255, 0, 255))
-    ht = DiamondSquareMap(new_image,damping=0.75,chaos=0)
-    #ht.erode()
-    #ht.erode()
-    #ht.erode()
+    ht = DiamondSquareMap(new_image,damping=0.75,chaos=1.0,delay=1,verbose=True)
     cm = ColorMap(new_image, ht)
     #ht = PerlinMap(new_image, pointdist=10)
     #ht.add(ht2)
-    cm.greyscale()
+    cm.std()
 
     ht.image.save(args.output_image, format='PNG')

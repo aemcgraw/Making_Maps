@@ -14,10 +14,10 @@ class ColorMap():
 
         for x in range(len(self.mapping)):
             for y in range(len(self.mapping[x])):
-                val = self.mapping[x][y]
-                pixels[x, y] = ( int(255 * val),
-                                 int(255 * val),
-                                 int(255 * val),
+                val = self.mapping[x][y] + 1
+                pixels[x, y] = ( int(127 * val),
+                                 int(127 * val),
+                                 int(127 * val),
                                  255 )
 
     def std(self):
