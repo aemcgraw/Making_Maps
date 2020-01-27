@@ -2,21 +2,36 @@ from PIL import Image
 
 from random import randint
 
-import Island
-import Forest
-import Region
+from Island import Island
+from Forest import Forest
+from Region import Region
 
-class Map(Region.Region):
+import HeightMap
+
+class Map(Region):
     def __init__(self, image, bound=None):
         self.image = Image.new('RGBA', (image.width, image.height), (0, 0, 255, 255))
         self.bounding_region = bound
 
         self.interior = set([])         #Unused, for compatibility with region
-        self.open_exterior = set([])    #Unused
-        self.closed_exterior = set([])  #Unused
+        self.edge = set([])             #Unused
+        self.outer_edge = set([])       #Unused
 
         self.islands = []
         self.forests = []
+
+    def __init__(self, image, HeightMap, bound=None):
+        self.image = HeightMap.image
+        self.bounding_region = bound
+
+        self.interior = set([])
+        self.edge = set([])
+        self.outer_edge = set([])
+
+        self.islands = self.get_islands_from_heightmap(HeightMap)
+        self.forests = []
+
+    def get_islands_from_heightmap
 
     #Erases all islands
     def flood(self):
@@ -25,13 +40,13 @@ class Map(Region.Region):
 
     def draw_forest(self, count):
         island = self.islands[randint(0, len(self.islands) - 1)]
-        new_forest = Forest.Forest(self.image, count, self, island)
+        new_forest = Forest(self.image, count, self, island)
         new_forest.build_forest()
         new_forest.add_forest_to_image()
         self.forests.append(new_forest)
 
     def draw_island(self, count):
-        new_island = Island.Island(self.image, count, self)
+        new_island = Island(self.image, count, self)
         new_island.build_island()
         new_island.add_island_to_image()
         new_island.add_shallows_to_image()
@@ -54,7 +69,7 @@ class Map(Region.Region):
         else:
             return self.get_some_closed_ext_point()
 
-    #Gets a point on the closed exterior of a random region
+    #Gets a point on the outer_edge of a random region
     def get_some_closed_ext_point(self):
         if len(self.islands) == 0:
             return None

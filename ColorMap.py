@@ -2,6 +2,8 @@ from PIL import Image
 
 from HeightMap import HeightMap
 
+import math
+
 class ColorMap():
     def __init__(self, image, heightmap):
         self.image = image
@@ -20,18 +22,26 @@ class ColorMap():
                                  int(127 * val),
                                  255 )
 
+    def forest_nothing(self):
+        pixels = self.image.load()
+
+        for x in range(len(self.mapping)):
+            for y in range(len(self.mapping[x])):
+                if self.mapping[x][y] > 0:
+                    pixels[x, y] = (0, 128, 0, 255)
+
     def std(self):
         pixels = self.image.load()
 
         print(max([max(x) for x in self.mapping]))
-        print("HI")
         for x in range(len(self.mapping)):
             for y in range(len(self.mapping[x])):
                 val = self.mapping[x][y]
                 if val < 0:
-                    pixels[x, y] = (0, 0, 255, 255)
-                elif val/self.scale > 1.0:
-                    pixels[x, y] = (255, 0, 0, 255)
+                    sc = max(1 + (val / 3), 0.5)
+                    #pixels[x, y] = (80, int(180 - math.sqrt(-val) * 100), 255, 255)
+                    #TODO : Find a better expression to evaluate this
+                    pixels[x, y] = (int(sc * 80), int( (180 - math.sqrt(-val) * 100) * sc), int(sc * 255), 255)
                 elif val/self.scale > 0.7:
                     pixels[x, y] = (255, 255, 255, 255)
                 elif val/self.scale > 0.3:

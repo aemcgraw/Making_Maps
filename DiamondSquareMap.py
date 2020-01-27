@@ -135,13 +135,12 @@ class DiamondSquareMap(HeightMap):
         self.setup(boxmap, 0, bx)
         self.setup(boxmap, bx, bx)
 
-        #if self.verbose:
-        #    for x in range(0, totalsize, bx):
-        #        print(str([x for x in boxmap[x] if x != 0]))
-  
         while ( bx / 2 ) >= 1:
             if self.delay > 0:
                 self.delay -= 1
+                if self.delay == 0 and self.verbose:
+                    for x in range(0, totalsize, bx):
+                        print(str([x for x in boxmap[x] if x != 0]))
             else:
                 self.chaos = self.chaos * self.damping
 

@@ -2,9 +2,9 @@ from PIL import Image
 
 from random import randint
 
-import Region
+from Region import Region
 
-class Forest(Region.Region):
+class Forest(Region):
     def __init__(self, image, count, map, island):
         self.image = image
         self.map = map
@@ -12,8 +12,8 @@ class Forest(Region.Region):
         seed = self.get_seed()
 
         self.interior = set([seed])
-        self.open_exterior = set([])
-        self.closed_exterior = set([])
+        self.edge = set([])
+        self.outer_edge = set([])
         self.count = count
 
         self.add_shallows(seed)
@@ -26,14 +26,14 @@ class Forest(Region.Region):
                 potential_point = (x_loc + x_adjust, y_loc + y_adjust)
                 if (self._is_valid(potential_point) and (potential_point not in self.interior) and 
                                                 (potential_point in self.bounding_region.interior)):
-                    self.closed_exterior.add(potential_point)
+                    self.outer_edge.add(potential_point)
 
     def add_land_random(self):
-        if len(self.closed_exterior) != 0:
+        if len(self.outer_edge) != 0:
             #random_position = randint(0, len(self.shallows) - 1)
             #new_land = self.shallows.pop(random_position)
 
-            new_land = self.closed_exterior.pop()	
+            new_land = self.outer_edge.pop()
             #This might not be very random
             self.interior.add(new_land)
             self.add_shallows(new_land)

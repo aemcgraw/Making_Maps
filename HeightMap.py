@@ -4,6 +4,7 @@ from random import randint
 from random import uniform
 
 import math
+from statistics import median_low
 
 class HeightMap(object):
     def __init__(self, image):
@@ -18,6 +19,30 @@ class HeightMap(object):
         for x in range(self.image.width):
             rows.append(column[:])
         return rows
+
+    def get_perc_above_0(self): #float
+        val = 0
+        for x in range(len(self.mapping)):
+            for y in range(len(self.mapping[x])):
+                if self.mapping[x][y] > 0:
+                    val += 1
+        return val / ((self.image.width - 1) * (self.image.height - 1)) 
+
+    def get_low_median(self): #flloat
+        flatten_mapping = [ x for y in self.mapping for x in y ]
+        quantiles = median_low(flatten_mapping)
+        return quantiles
+
+    #def get_quantiles(self): #[ float ]
+    #    flatten_mapping = [ x for y in self.mapping for x in y ]
+    #    quantiles = statistics.quantiles(flatten_mapping, n=10)
+    #    return quantiles
+
+    def adjust_global(self, adjust):
+        adjust = round(adjust, 3)
+        for x in range(len(self.mapping)):
+            for y in range(len(self.mapping[x])):
+                self.mapping[x][y] -= adjust
 
     def erode(self):
         count = 0
@@ -53,7 +78,7 @@ class HeightMap(object):
     def heightmap_to_image(self):
         pixels = self.image.load()
 
-        print(max([max(x) for x in self.mapping]))
+        print("MaxHeight : " + str(max([max(x) for x in self.mapping])))
         for x in range(len(self.mapping)):
             for y in range(len(self.mapping[x])):
                 val = self.mapping[x][y]

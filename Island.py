@@ -2,9 +2,9 @@ from PIL import Image
 
 from random import randint
 
-import Region
+from Region import Region
 
-class Island(Region.Region):
+class Island(Region):
     def __init__(self, image, count, map):
         self.image = image
         self.map = map
@@ -12,8 +12,8 @@ class Island(Region.Region):
 
         seed = map.get_weighted_seed()
         self.interior = set([ seed ])
-        self.open_exterior = set([])
-        self.closed_exterior = set([])
+        self.edge = set([])
+        self.outer_edge = set([])
         self.count = count
 
         self.add_shallows(seed)
@@ -24,14 +24,14 @@ class Island(Region.Region):
             for y_adjust in range(-1, 2, 1):
                 potential_point = (x_loc + x_adjust, y_loc + y_adjust)
                 if self._is_valid(potential_point) and potential_point not in self.interior:
-                    self.closed_exterior.add(potential_point)
+                    self.couter_edge.add(potential_point)
 
     def add_land_random(self):
-        if len(self.closed_exterior) != 0:
+        if len(self.outer_edge) != 0:
             #random_position = randint(0, len(self.shallows) - 1)
             #new_land = self.shallows.pop(random_position)
 
-            new_land = self.closed_exterior.pop()	
+            new_land = self.outer_edge.pop()
             #This might not be very random
             self.interior.add(new_land)
             self.add_shallows(new_land)
@@ -56,5 +56,5 @@ class Island(Region.Region):
 
     def add_shallows_to_image(self):
         pixels = self.image.load()
-        for (shallow_x, shallow_y) in self.closed_exterior:
+        for (shallow_x, shallow_y) in self.outer_edge:
             pixels[shallow_x, shallow_y] = (0, 255, 255, 255)
