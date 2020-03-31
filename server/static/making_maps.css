@@ -1,0 +1,55 @@
+body {
+	background-color: SkyBlue;
+	font-family: sans-serif;
+}
+
+header {
+	background-color: SkyBlue;
+	border: 1px solid black;
+	color: Black;
+	padding: 15px;
+	margin: 10px 10px 0px 10px;
+	font-size: 110%;
+}
+
+footer {
+	background-color: SkyBlue;
+	color: Black;
+	text-align: center;
+	padding: 15px;
+	margin: 0px 10px 10px 10px;
+	font-size: 90%;
+	clear: left;
+}
+
+/*
+ * main page
+ */
+
+#datapage {
+	display: table;
+	width: 98%;
+}
+
+#dataRow {
+	display: table-row;
+	border: 1px solid black;
+}
+
+#mapdata {
+	display: table-cell;
+	padding: 10px;
+	background-color: SkyBlue;
+	text-align: left;
+	width: 80%;
+}
+
+#sidebar {
+	border: 1px solid black;
+	display: table-cell;
+	background-color: Seashell;
+	overflow: scroll;
+	height: 800px;
+	width: 20%;
+	vertical-align: text-top;
+}
